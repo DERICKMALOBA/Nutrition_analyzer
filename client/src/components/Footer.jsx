@@ -8,9 +8,9 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
           <div className="text-center md:text-left">
             <h2 className="text-xl font-semibold mb-2">Contact Information</h2>
-            <p>Email: support@nutritrack.com</p>
-            <p>Phone: +123 456 7890</p>
-            <p>Address: 123 Nutri Street, Healthy City</p>
+            <p>Email: mujohn2002@gmail.com</p>
+            <p>Phone: +254759968364</p>
+            <p>Address: 2017-30111 ELDORET, CHEPKOILEL</p>
           </div>
 
           {/* Social Media Links */}
@@ -23,7 +23,7 @@ const Footer = () => {
 
         {/* Footer Bottom */}
         <div className="mt-6 text-center text-sm">
-          <p>&copy; {new Date().getFullYear()} NutriTrack. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} Nutrition Analyzer. All rights reserved.</p>
         </div>
       </div>
     </footer>

@@ -6,17 +6,33 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setError(''); // Clear previous errors
+    if (!email || !password) {
+      setError('Please fill in both fields.');
+      return;
+    }
+
+    setLoading(true);
     try {
       const response = await axios.post('/api/auth/login', { email, password });
-      // Assuming the response contains a token
       localStorage.setItem('token', response.data.token);
+      const token = response.data.token; // Extract the token
+        localStorage.setItem('token', token); // Store token in localStorage
+        console.log('Token:', token); //
       navigate('/dashboard');
     } catch (err) {
-      setError('Invalid email or password');
+      if (err.response && err.response.data) {
+        setError(err.response.data.message);
+      } else {
+        setError('An unexpected error occurred. Please try again.');
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -42,14 +58,13 @@ const Login = () => {
             placeholder="Password"
             className="mb-4 p-2 w-full border rounded"
           />
-          <button type="submit" className="p-2 bg-blue-500 text-white rounded w-full">
-            Login
+          <button type="submit" className={`p-2 ${loading ? 'bg-gray-400' : 'bg-blue-500'} text-white rounded w-full`} disabled={loading}>
+            {loading ? 'Logging in...' : 'Login'}
           </button>
         </form>
         <p className="mt-4 text-center">
-  Don't have an account? <Link to="/signup" className="text-blue-500">Sign up</Link>
-</p>
-
+          Don't have an account? <Link to="/signup" className="text-blue-500">Sign up</Link>
+        </p>
       </div>
     </div>
   );

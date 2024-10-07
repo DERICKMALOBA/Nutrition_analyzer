@@ -15,7 +15,7 @@ const Profile = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await axios.get('/api/users/profile');
+        const response = await axios.get('/api/user/profile');
         setProfile(response.data);
       } catch (error) {
         console.error('Error fetching profile:', error);
@@ -32,7 +32,7 @@ const Profile = () => {
 
   const updateProfile = async () => {
     try {
-      await axios.put('/api/users/profile', profile);
+      await axios.put('/api/user/profile', profile);
       alert('Profile updated successfully!');
     } catch (error) {
       console.error('Error updating profile:', error);

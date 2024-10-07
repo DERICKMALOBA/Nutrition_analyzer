@@ -2,7 +2,7 @@ import React from 'react';
 import { useUserContext } from '../context/userContext';
 
 const Dashboard = () => {
-  // Fetch user context, with a fallback to an empty object
+  // Fetch user context; if no context, fallback to an empty object
   const { user } = useUserContext() || {}; 
 
   // Show loading state while user data is being fetched

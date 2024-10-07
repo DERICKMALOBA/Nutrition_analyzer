@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
 
 const CalorieCalculator = () => {
   const [feet, setFeet] = useState('');
@@ -11,50 +12,32 @@ const CalorieCalculator = () => {
 
   // Function to handle height input in feet and convert to inches
   const handleFeetChange = (e) => {
-    const feetValue = e.target.value;
-    setFeet(feetValue);
-    const inchesEquivalent = feetValue ? (feetValue * 12).toFixed(0) : '';
-    setInches(inchesEquivalent);
+    setFeet(e.target.value);
   };
 
   // Function to handle height input in inches and convert to feet
   const handleInchesChange = (e) => {
-    const inchesValue = e.target.value;
-    setInches(inchesValue);
-    const feetEquivalent = inchesValue ? (inchesValue / 12).toFixed(2) : '';
-    setFeet(feetEquivalent);
+    setInches(e.target.value);
   };
 
   // Function to calculate recommended calories
-  const calculateCalories = (e) => {
+  const calculateCalories = async (e) => {
     e.preventDefault();
 
-    // Convert feet and inches to total inches, then to centimeters
-    const totalInches = (parseFloat(feet) * 12) + parseFloat(inches);
-    const heightCm = totalInches * 2.54;
+    try {
+      const response = await axios.post('/api/calories/calculate', {
+        feet,
+        inches,
+        weight,
+        activity,
+        gender,
+      });
 
-    // BMR Calculation based on the Mifflin-St Jeor equation
-    let BMR = 0;
-    if (gender === 'male') {
-      BMR = 88.362 + (13.397 * parseFloat(weight)) + (4.799 * heightCm) - (5.677 * 25); // Assuming average age of 25
-    } else {
-      BMR = 447.593 + (9.247 * parseFloat(weight)) + (3.098 * heightCm) - (4.330 * 25); // Assuming average age of 25
+      setCalories(response.data.maintenanceCalories);
+      setCalorieDeficit(response.data.calorieDeficit);
+    } catch (error) {
+      console.error('Error calculating calories:', error);
     }
-
-    // Activity multiplier
-    const activityMultiplier = {
-      sedentary: 1.2,
-      moderate: 1.55,
-      active: 1.725
-    };
-
-    const maintenanceCalories = BMR * activityMultiplier[activity];
-
-    // Suggesting calorie deficit for weight loss (500 calories/day)
-    const deficitCalories = maintenanceCalories - 500;
-
-    setCalories(maintenanceCalories.toFixed(0));
-    setCalorieDeficit(deficitCalories.toFixed(0));
   };
 
   return (

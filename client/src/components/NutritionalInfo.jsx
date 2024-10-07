@@ -1,7 +1,32 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
-const NutritionalInfo = ({ foodItem }) => {
-  if (!foodItem) return <p>No nutritional data available.</p>;
+const NutritionalInfo = ({ foodItemId }) => {
+  const [foodItem, setFoodItem] = useState(null); // State to hold the food item data
+  const [loading, setLoading] = useState(true); // State to track loading status
+  const [error, setError] = useState(null); // State to track any error
+
+  useEffect(() => {
+    const fetchNutritionalInfo = async () => {
+      try {
+        setLoading(true); // Set loading to true before fetching
+        const response = await axios.get(`/api/food-item/${foodItemId}`); // Fetch the nutritional data
+        setFoodItem(response.data); // Set the food item data to state
+      } catch (err) {
+        setError('Failed to fetch nutritional data.'); // Set error message
+      } finally {
+        setLoading(false); // Set loading to false after fetching
+      }
+    };
+
+    if (foodItemId) {
+      fetchNutritionalInfo(); // Fetch the data if foodItemId is provided
+    }
+  }, [foodItemId]); // Dependency array includes foodItemId to refetch if it changes
+
+  if (loading) return <p>Loading nutritional data...</p>; // Show loading message
+  if (error) return <p>{error}</p>; // Show error message if there's an error
+  if (!foodItem) return <p>No nutritional data available.</p>; // Handle case when no data is available
 
   const { name, calories, protein, carbs, fat, vitamins } = foodItem;
 
